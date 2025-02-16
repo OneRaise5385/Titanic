@@ -9,18 +9,26 @@
 输入文件。如果是NLP项目，可以将embeddings放在这里；如果是图像项目，所有图像都放在该文件夹下的子文件夹。
 - `gender_submission.csv`提交文件示例
 - `test.csv`测试集，要预测的文件
+- `test_final.csv`清洗和特征工程之后的测试集
 - `train.csv`训练集
-## src
-所有python脚本
+- `train_fianl.csv`清洗和特征工程之后的训练集
 ## models
 所有训练过的模型，以及模型预测的结果
 ## notebook
 所有jupyter notebook文件
+- `deepseek.ipynb` 人工智能助手DeepSeek
+- `reference.ipynb` 参考笔记
+- `titanic.ipynb` 数据详情，数据清洗，特征工程
+- `tools.py` 各种工具
+## src
+所有python脚本
 ## LICENSE
 许可证
 `MIT License`
 特点: 非常宽松，允许他人几乎无限制地使用代码，只需保留原作者的版权声明和许可声明。适用场景: 适合希望代码被广泛使用的项目。
+## 经验总结
+
 ## 参考
-[Titanic Competition: EDA & FE & Model](https://www.kaggle.com/code/mariyamalshatta/titanic-competition-eda-fe-model)
-[Titanic - Advanced Feature Engineering Tutorial](https://www.kaggle.com/code/gunesevitan/titanic-advanced-feature-engineering-tutorial)
-[Titanic: on the top with a simple model](https://www.kaggle.com/code/goldens/titanic-on-the-top-with-a-simple-model)
+1. [Titanic Competition: EDA & FE & Model](https://www.kaggle.com/code/mariyamalshatta/titanic-competition-eda-fe-model)
+2. [Titanic - Advanced Feature Engineering Tutorial](https://www.kaggle.com/code/gunesevitan/titanic-advanced-feature-engineering-tutorial)
+3. [Titanic: on the top with a simple model](https://www.kaggle.com/code/goldens/titanic-on-the-top-with-a-simple-model)
