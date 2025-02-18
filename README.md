@@ -2,9 +2,10 @@
 ## images
 图片
 - `structure_titanic.jpg`泰坦尼克号截面
-    ![泰坦尼克号的结构图](images/structure_titanic.jpg)
+    ![泰坦尼克号的结构图](images/structure_titanic.jpg){width=40%}
 - `Titanic_side.jpg`侧面结构图
     ![侧面结构图](images/Titanic_side.jpg)
+
 ## input
 输入文件。如果是NLP项目，可以将embeddings放在这里；如果是图像项目，所有图像都放在该文件夹下的子文件夹。
 - `gender_submission.csv`提交文件示例
@@ -12,20 +13,36 @@
 - `test_final.csv`清洗和特征工程之后的测试集
 - `train.csv`训练集
 - `train_fianl.csv`清洗和特征工程之后的训练集
+
 ## models
-所有训练过的模型，以及模型预测的结果
+所有训练过的模型
+|模型      |测试得分   |提交得分   |备注      |
+| -------- | -------- | -------- | -------- |
+|svc_linear.pkl|0.82826|None|支持向量机使用linear核函数|
+|svc_poly.pkl|0.83724|0.77511|支持向量机使用poly核函数|
+|svc_rbf.pkl|0.83387|None|支持向量机使用rbf核函数|
+|svc_sigmoid.pkl|0.76543|None|支持向量机使用sigmoid核函数|
+
 ## notebook
 所有jupyter notebook文件
 - `deepseek.ipynb` 人工智能助手DeepSeek
 - `reference.ipynb` 参考笔记
 - `titanic.ipynb` 数据详情，数据清洗，特征工程
 - `tools.py` 各种工具
+
 ## src
 所有python脚本
+`titanic.py` 模型的训练
+`tools.py` 各种工具的合集
+
+## submission
+所有的提交文件
+
 ## LICENSE
 许可证
 `MIT License`
 特点: 非常宽松，允许他人几乎无限制地使用代码，只需保留原作者的版权声明和许可声明。适用场景: 适合希望代码被广泛使用的项目。
+
 ## 经验总结
 
 ## 参考

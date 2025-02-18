@@ -7,11 +7,13 @@ from sklearn.preprocessing import StandardScaler
 import warnings
 warnings.filterwarnings('ignore')
 
-def data_overview(df, head=True):
+def data_overview(df, head=True, describe=True):
     '''数据详情'''
     # 基本信息
     if head:
         display(df.head())
+    if describe:
+        display(df.describe().T)
     # 缺失值
     missing_values = df.isnull().sum()
     missing_percentage = (df.isnull().sum() / len(df)) * 100
@@ -41,7 +43,7 @@ def data_overview(df, head=True):
     
 def preprocess_num(df: pd.DataFrame, columns_num: list):
     '''
-    连续变量的处理\n
+    连续变量的处理 (数据标准化)\n
     df: 包含需要处理的数值型数据\n
     columns_cat: 数值型变量的列名
     return: 包含处理前和处理后的数据框
@@ -55,7 +57,7 @@ def preprocess_num(df: pd.DataFrame, columns_num: list):
 
 def preprocess_cat(df: pd.DataFrame, columns_cat: list):
     '''
-    分类变量的处理\n
+    分类变量的处理（独热编码）\n
     df: 需要处理的包含分类变量的数据\n
     columns_cat: 分类变量的列名\n
     return: 包含处理前和处理后的数据框
