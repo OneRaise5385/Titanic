@@ -4,6 +4,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import StandardScaler
+import joblib
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -91,3 +92,22 @@ def impute_num(df, columns_X, columns_y, model):
     if df[columns_y].isna().sum():
         df.loc[df[columns_y].isna(), columns_y] = model.predict(df[columns_X][df[columns_y].isna()])
     return df
+
+
+def submit(model_name : str,
+           test : pd.DataFrame):
+    ''' 
+    保存提交（预测）的数据\n
+    model_name: 模型的名称（只传入点号之前的名称）\n
+    test: 需要预测的数据集
+    '''
+    # 载入模型
+    model = joblib.load(f'../models/{model_name}.pkl')
+
+    # 使用模型预测
+    y_pred = model.predict(test)
+
+    # 保存提交
+    submission = pd.read_csv('../submission/submission.csv')
+    submission['Survived'] = y_pred.astype(int)
+    submission.to_csv(f'../submission/{model_name}.csv', index=None)

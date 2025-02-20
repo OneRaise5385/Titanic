@@ -2,7 +2,7 @@
 ## images
 图片
 - `structure_titanic.jpg`泰坦尼克号截面
-    ![泰坦尼克号的结构图](images/structure_titanic.jpg){width=40%}
+    <img src="images/structure_titanic.jpg" alt="泰坦尼克号的结构图" width="200">
 - `Titanic_side.jpg`侧面结构图
     ![侧面结构图](images/Titanic_side.jpg)
 
@@ -18,10 +18,10 @@
 所有训练过的模型
 |模型      |测试得分   |提交得分   |备注      |
 | -------- | -------- | -------- | -------- |
-|svc_linear.pkl|0.82826|None|支持向量机使用linear核函数|
+|svc_linear.pkl|0.82826|0.77511|支持向量机使用linear核函数|
 |svc_poly.pkl|0.83724|0.77511|支持向量机使用poly核函数|
-|svc_rbf.pkl|0.83387|None|支持向量机使用rbf核函数|
-|svc_sigmoid.pkl|0.76543|None|支持向量机使用sigmoid核函数|
+|svc_rbf.pkl|0.83387|0.77511|支持向量机使用rbf核函数|
+|svc_sigmoid.pkl|0.76543|0.73684|支持向量机使用sigmoid核函数|
 
 ## notebook
 所有jupyter notebook文件
@@ -37,7 +37,9 @@
 
 ## submission
 所有的提交文件
-
+`refer1.csv` 参考1中生成的提交
+`refer3.csv` 参考3中生成的提交
+`submission.csv` 提交示例
 ## LICENSE
 许可证
 `MIT License`
