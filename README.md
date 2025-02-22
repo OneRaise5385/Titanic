@@ -28,6 +28,9 @@
 |randomforest.pkl|None|None|最佳的随机森林|
 |bayes_gaussian.pkl|0.81704|0.75358|基于高斯分布的朴素贝叶斯|
 |bayes_bernoulli.pkl|0.80470|None|基于伯努利分布的朴素贝叶斯|
+|knn.pkl|0.82263|0.77751|K近邻算法|
+|adaboost.pkl|0.82269|0.74641|adaboost算法，基学习器为决策树树桩|
+|lightgbm.pkl|0.84287|0.76315|lightgbm算法，没有精调|
 
 
 ## notebook

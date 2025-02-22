@@ -5,6 +5,7 @@ from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import StandardScaler
 import joblib
+import psutil
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -111,3 +112,12 @@ def submit(model_name : str,
     submission = pd.read_csv('../submission/submission.csv')
     submission['Survived'] = y_pred.astype(int)
     submission.to_csv(f'../submission/{model_name}.csv', index=None)
+    
+
+def memory():
+    mem = psutil.virtual_memory()
+    print(f"可用内存: {mem.available / 1024 / 1024:.2f} MB")
+    print(f"内存使用率: {mem.percent}%")
+    
+
+memory()

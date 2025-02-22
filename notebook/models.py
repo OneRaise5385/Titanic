@@ -1,14 +1,55 @@
 import pandas as pd
-import joblib
 from sklearn.model_selection import GridSearchCV
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.naive_bayes import GaussianNB
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.naive_bayes import BernoulliNB
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import AdaBoostClassifier
-from sklearn.naive_bayes import GaussianNB
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.naive_bayes import BernoulliNB
+import lightgbm as lgb
+
+def best_knn_clf(X : pd.DataFrame,
+             y : pd.DataFrame, 
+             scoring='accuracy',
+             metrics = 'binary'):
+    '''
+    ！！！！有点问题，暂时先不用管
+    K近邻算法参数寻优\n
+    X：输入模型的特征\n
+    y：输入模型的标签\n
+    scoring：模型的评价标准，可取的值为 ['accuracy', 'precision', 'recall', 'f1', 'roc_auc']\n 
+    metrics:
+        numeric: 数值型数据的距离
+        binary: 二值型数据的距离
+        text: 文本或高维稀疏数据的距离
+        
+    return: 输出最佳的模型
+    '''
+    # 定义参数网格
+    if metrics == 'numeric':
+        metric = ['euclidean', 'manhattan', 'chebyshev', 'minkowski']
+    elif metrics == 'binary':
+        metric = ['hamming', 'jaccard']
+    elif metrics == 'text':
+        metric = ['cosine', 'correlation']
+        
+    param_grid = {'n_neighbors' : [3, 5, 7, 9],
+                  'weights' : ['uniform', 'distance'],
+                  'algorithm' : ['auto', 'ball_tree', 'kd_tree', 'brute'],
+                  'leaf_size' : [10, 20, 30, 40, 50],
+                  'p' : [1, 2],
+                  'metric' : metric}
+    model = KNeighborsClassifier()
+
+    # 使用GridSearchCV进行超参数调优
+    grid_search = GridSearchCV(model, param_grid, scoring=scoring, 
+                               n_jobs=-1, cv=5)
+    grid_search.fit(X, y)
+    print(f'KNN Best Params: ',grid_search.best_params_)
+    print(f'KNN Best Score: ', grid_search.best_score_)
+    return grid_search.best_estimator_
 
 
 def best_bayes_clf(X : pd.DataFrame,
@@ -48,16 +89,17 @@ def best_bayes_clf(X : pd.DataFrame,
                                n_jobs=-1, cv=5, verbose=2)
     grid_search.fit(X, y)   
     # 打印最佳参数和得分
-    print(f'GaussianNB Best Params: ',grid_search.best_params_)
-    print(f'GaussianNB Best Score: ', grid_search.best_score_)      
+    print(f'{model_name} Best Params: ',grid_search.best_params_)
+    print(f'{model_name} Best Score: ', grid_search.best_score_)      
     return grid_search.best_estimator_
+
 
 def best_svm_clf(X : pd.DataFrame,
              y : pd.DataFrame, 
              scoring='accuracy',
              kernel = 'rbf'):
     '''
-    SVC参数寻优\n
+    支持向量机参数寻优\n
     X：输入模型的特征\n
     y：输入模型的标签\n
     kernel：选择使用哪种和函数，取值为 ['rbf', 'linear', 'poly', 'sigmoid']\n
@@ -164,4 +206,73 @@ def best_randomforest_clf(X : pd.DataFrame,
     print(f'RandomForest Best Params: ',grid_search.best_params_)
     print(f'RandomForest Best Score: ', grid_search.best_score_)
     
+    return grid_search.best_estimator_
+
+def best_adaboost_clf(X : pd.DataFrame,
+                      y : pd.DataFrame, 
+                      scoring='accuracy',
+                      base_estimator = 'deprecated',
+                      algorithm = 'SAMME.R'):
+    '''
+    Adaboost参数寻优\n
+    X：输入模型的特征\n
+    y：输入模型的标签\n
+    scoring：模型的评价标准，可取的值为 ['accuracy', 'precision', 'recall', 'f1', 'roc_auc']\n
+    base_estimator: 
+        'SAMME': 输出类型为离散的类别标签，权重更新依据为分类错误率，要求弱分类器输出类别标签
+        'SAMME.R': 输出类型为离散的类别的概率分布，权重更新依据为估计概率，要求弱分类器输出概率（实现 predict_proba 方法）
+    
+    return: 输出最佳的模型
+    '''
+    # 定义参数网格
+    param_grid = {'n_estimators': [1000],}  # 对于集成算法，这个越大越好
+    model = AdaBoostClassifier(algorithm=algorithm, 
+                               base_estimator=base_estimator)
+
+    # 使用GridSearchCV进行超参数调优
+    grid_search = GridSearchCV(model, param_grid, scoring=scoring, 
+                               n_jobs=-1, cv=5)
+    grid_search.fit(X, y)
+    print(f'AdaBoost Best Params: ',grid_search.best_params_)
+    print(f'AdaBoost Best Score: ', grid_search.best_score_)
+    return grid_search.best_estimator_
+
+def best_lightgbm_clf(X : pd.DataFrame,
+                      y : pd.DataFrame, 
+                      scoring='accuracy',
+                      boosting_type = 'gbdt'):
+    '''
+    lightgbm参数寻优\n
+    X：输入模型的特征\n
+    y：输入模型的标签\n
+    scoring：模型的评价标准，可取的值为 ['accuracy', 'precision', 'recall', 'f1', 'roc_auc']\n
+    boosting_type:
+        gbdt: 训练速度快，适用于大多数场景
+        dart: 数据量小且容易过拟合的场景
+        rf: 高维数据或需要强正则化的场景，防止过拟合的能力强
+        
+    return: 输出最佳的模型
+    '''
+    # 定义参数网格
+    param_grid = {'num_leaves': [31, 63],  # [31, 63]
+                  'max_depth': [3, 7, -1],  # [3, 5, 7, -1]
+                  'min_split_gain': [0, 0.1, 0.2],  # [0, 0.1, 0.2]
+                  'min_child_weight': [0.001, 0.1, 1],  # [0.001, 0.01, 0.1, 1]
+                  'min_child_samples': [10, 20, 50],  # [10, 20, 50]
+                  'subsample_freq': [0],  # [5, 10]
+                  'colsample_bytree' : [0.8, 1],  # [0.8, 1]
+                  'reg_alpha': [0, 0.1],  # [0, 0.1]
+                  'reg_lambda': [0, 0.1]}  # [0, 0.1]
+    
+    model = lgb.LGBMClassifier(boosting_type=boosting_type, 
+                               learning_rate=0.01,
+                               n_estimators=200,  # 1000
+                               n_jobs=-1)
+    
+    # 使用GridSearchCV进行超参数调优
+    grid_search = GridSearchCV(model, param_grid, scoring=scoring, 
+                               n_jobs=-1, cv=5)
+    grid_search.fit(X, y)
+    print(f'LightGBM Best Params: ',grid_search.best_params_)
+    print(f'LightGBM Best Score: ', grid_search.best_score_)
     return grid_search.best_estimator_
