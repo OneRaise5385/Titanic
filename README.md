@@ -31,7 +31,7 @@
 |knn.pkl|0.82263|0.77751|K近邻算法|
 |adaboost.pkl|0.82269|0.74641|adaboost算法，基学习器为决策树树桩|
 |lightgbm.pkl|0.84287|0.76315|lightgbm算法，没有精调|
-
+|xgboost.pkl|0.84287|0.73923|xgboost算法，也没精调|
 
 ## notebook
 所有jupyter notebook文件

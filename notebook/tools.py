@@ -120,4 +120,4 @@ def memory():
     print(f"内存使用率: {mem.percent}%")
     
 
-memory()
+# memory()

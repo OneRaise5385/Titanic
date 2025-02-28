@@ -9,6 +9,8 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import AdaBoostClassifier
 import lightgbm as lgb
+import xgboost as xgb
+
 
 def best_knn_clf(X : pd.DataFrame,
              y : pd.DataFrame, 
@@ -275,4 +277,38 @@ def best_lightgbm_clf(X : pd.DataFrame,
     grid_search.fit(X, y)
     print(f'LightGBM Best Params: ',grid_search.best_params_)
     print(f'LightGBM Best Score: ', grid_search.best_score_)
+    return grid_search.best_estimator_
+
+
+def best_xgboost_clf(X : pd.DataFrame,
+                      y : pd.DataFrame, 
+                      scoring='accuracy',
+                      objective='binary:logistic',
+                      eval_metric='logloss'):
+    '''
+    lightgbm参数寻优\n
+    X：输入模型的特征\n
+    y：输入模型的标签\n
+    scoring：模型的评价标准，可取的值为 ['accuracy', 'precision', 'recall', 'f1', 'roc_auc']\n
+    return: 输出最佳的模型\n
+    详细内容见文档
+    '''
+    # 定义参数网格
+    param_grid = {'eta':[0.05, 0.1, 0.2],   # 学习率
+                  'max_leaves':[31, 47, 63],  # 最大叶子节点数
+                  'max_depth':[5, 7, 10],  # 树的最大深度
+                  'subsample':[0.9],  # 每棵树使用的样本比例
+                  'colsample_bytree':[0.7,0.8, 1],  # 每棵树使用的特征比例
+                  'min_child_weight':[5, 10],  # 叶子节点所需的最小样本权重和 `1-10`
+                  'alpha':[0, 0.5, 1],  # L1 正则化项的权重，默认0
+                  'lambda':[0, 0.5, 1],}  # L2 正则化项的权重，默认1
+
+    model = xgb.XGBClassifier(objective=objective, eval_metric=eval_metric, verbosity=2)
+    
+    # 使用GridSearchCV进行超参数调优
+    grid_search = GridSearchCV(model, param_grid, scoring=scoring, 
+                               n_jobs=-1, cv=5)
+    grid_search.fit(X, y)
+    print(f'XGBoost Best Params: ',grid_search.best_params_)
+    print(f'XGBoost Best Score: ', grid_search.best_score_)
     return grid_search.best_estimator_
